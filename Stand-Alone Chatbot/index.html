@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="Favicon1.ico.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Quicktix</title>
+
+  <!-- CSS for Styling and Responsiveness -->
+  <style>
+    :root {
+      --background-light: #f5f5f5;
+      --text-light: #000;
+    }
+
+    body {
+      background-color: var(--background-light);
+      color: var(--text-light);
+      transition: background-color 0.5s, color 0.5s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Default chatbot size */
+    df-messenger {
+      position: absolute;
+      bottom: 50px;
+      z-index: 1;
+      width: 400px;
+      height: 60px; /* Default icon size */
+    }
+
+    /* Animation for the chatbot icon */
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    df-messenger {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Media query for larger screens (desktop) - Enlarge the chatbot icon */
+    @media screen and (min-width: 1024px) {
+      df-messenger {
+        width: 500px; /* Increase the width of the chatbot on desktop */
+        height: 80px; /* Increase height for larger icon */
+      }
+    }
+
+    /* Media query for mobile responsiveness */
+    @media screen and (max-width: 600px) {
+      body {
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+
+      df-messenger {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        animation: none; /* Remove float animation on mobile for fullscreen */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Chatbot Script -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger
+    intent="WELCOME"
+    chat-title="Chatticket"
+    chat-icon="https://www.pngkit.com/png/full/502-5023267_itpalooza-is-a-not-for-profit-community-driven.png"
+    agent-id="f869a013-1615-48d8-a6fb-c732a3460178"
+    language-code="en"
+  ></df-messenger>
+</body>
+
+</html>
