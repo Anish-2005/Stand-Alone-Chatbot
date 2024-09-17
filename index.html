@@ -12,26 +12,55 @@
     :root {
       --background-light: #f5f5f5;
       --text-light: #000;
+      --primary-color: #1a73e8; /* Primary color for accents */
+      --background-dark: #2b2b2b;
+      --text-dark: #fff;
     }
 
     body {
-      background-color: var(--background-light);
+      background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(120deg, #6f86d6, #48c6ef);
+      background-size: cover;
       color: var(--text-light);
-      transition: background-color 0.5s, color 0.5s;
+      font-family: 'Arial', sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      padding: 0;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
-    /* Default chatbot size */
+    .chatbot-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .chatbot-header {
+      font-size: 24px;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+    }
+
+    .chatbot-description {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
     df-messenger {
-      position: absolute;
-      bottom: 50px;
+      position: relative;
+      bottom: 10px;
       z-index: 1;
-      width: 400px;
-      height: 60px; /* Default icon size */
+      width: 100%;
+      height: 60px;
+      transition: height 0.3s ease;
     }
 
     /* Animation for the chatbot icon */
@@ -51,45 +80,90 @@
       animation: float 3s ease-in-out infinite;
     }
 
-    /* Media query for larger screens (desktop) - Enlarge the chatbot icon */
-    @media screen and (min-width: 1024px) {
+    /* Mobile responsiveness */
+    @media screen and (max-width: 600px) {
+      body {
+        background-size: contain;
+        flex-direction: column;
+        padding: 20px;
+      }
+
+      .chatbot-container {
+        background-color: rgba(255, 255, 255, 0.95);
+        width: 80%;
+        max-width: none;
+      }
+
       df-messenger {
-        width: 500px; /* Increase the width of the chatbot on desktop */
-        height: 80px; /* Increase height for larger icon */
+        width: 100%;
+        height: 80px; /* Slightly larger on mobile */
+        animation: none; /* Remove float animation on mobile */
       }
     }
 
-    /* Media query for mobile responsiveness */
-    @media screen and (max-width: 600px) {
-      body {
-        justify-content: flex-start;
-        align-items: flex-start;
-      }
+    /* Styles for landing title and subtitle */
+    .landing-container {
+      text-align: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
 
-      df-messenger {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        animation: none; /* Remove float animation on mobile for fullscreen */
-      }
+    .landing-title {
+      font-size: 48px;
+      color: #ffffff;
+      opacity: 0;
+      transform: translateY(-50px);
+      transition: all 1s ease-out;
+    }
+
+    .landing-subtitle {
+      font-size: 18px;
+      color: #333;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease-out;
+      transition-delay: 0.2s;
+    }
+
+    /* Animation trigger class */
+    .animate {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body>
-  <!-- Chatbot Script -->
-  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-  <df-messenger
-    intent="WELCOME"
-    chat-title="Chatticket"
-    chat-icon="https://www.pngkit.com/png/full/502-5023267_itpalooza-is-a-not-for-profit-community-driven.png"
-    agent-id="f869a013-1615-48d8-a6fb-c732a3460178"
-    language-code="en"
-  ></df-messenger>
+  
+  <div class="landing-container">
+    <h1 class="landing-title">Welcome to ChatTicket</h1>
+    <p class="landing-subtitle">Your one-stop solution for online ticketing with seamless chatbot support.</p>
+  </div>
+
+  <div class="chatbot-container">
+    <div class="chatbot-header">QuickTix Chatbot</div>
+    <div class="chatbot-description">How can we assist you today? Feel free to ask anything about ticket booking! <br><br>
+      Click on the Chatbot Icon below to use the Chatbot for booking your Tickets.
+    </div>
+    <!-- Chatbot Script -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+      intent="WELCOME"
+      chat-title="Chatticket"
+      chat-icon="https://www.pngkit.com/png/full/502-5023267_itpalooza-is-a-not-for-profit-community-driven.png"
+      agent-id="f869a013-1615-48d8-a6fb-c732a3460178"
+      language-code="en">
+    </df-messenger>
+  </div>
+
+  <!-- Trigger the animation when the page loads -->
+  <script>
+    window.onload = function() {
+      document.querySelector('.landing-title').classList.add('animate');
+      document.querySelector('.landing-subtitle').classList.add('animate');
+    };
+  </script>
+
 </body>
 
 </html>
