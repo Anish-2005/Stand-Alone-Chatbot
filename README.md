@@ -382,18 +382,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 ### Project Team
-- **Project Lead**: [Your Name]
-- **Email**: [your.email@domain.com]
-- **GitHub**: [Your GitHub Profile]
-
-### Support
-- **Issues**: [GitHub Issues Page]
-- **Documentation**: This README file
-- **Wiki**: [Project Wiki Link]
+- **Project Lead**: [Anish Seth]
+- **Email**: [anishseth0510@gmail.com]
+- **GitHub**: [https://github.com/Anish-2005]
 
 ### Social Media
-- **Twitter**: [@YourHandle]
-- **LinkedIn**: [Your LinkedIn Profile]
+- **LinkedIn**: [https://linkedin.com/in/anishseth]
 
 ---
 
