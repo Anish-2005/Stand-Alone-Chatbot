@@ -3,6 +3,71 @@ let isOpening = false;
 let activeNotification = null;
 let resizeTimer;
 
+function getStoredTheme() {
+  try {
+    return localStorage.getItem('theme');
+  } catch (error) {
+    return null;
+  }
+}
+
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  document.documentElement.classList.toggle('dark', isDark);
+
+  const toggleButton = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+
+  if (themeIcon) {
+    themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+  }
+
+  if (themeLabel) {
+    themeLabel.textContent = isDark ? 'Light' : 'Dark';
+  }
+
+  if (toggleButton) {
+    toggleButton.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+}
+
+function initTheme() {
+  const savedTheme = getStoredTheme();
+  const initialTheme = savedTheme || getSystemTheme();
+  applyTheme(initialTheme);
+
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const onSystemThemeChange = function (event) {
+    if (!getStoredTheme()) {
+      applyTheme(event.matches ? 'dark' : 'light');
+    }
+  };
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', onSystemThemeChange);
+  } else if (typeof mediaQuery.addListener === 'function') {
+    mediaQuery.addListener(onSystemThemeChange);
+  }
+}
+
+function toggleTheme() {
+  const isCurrentlyDark = document.documentElement.classList.contains('dark');
+  const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+
+  applyTheme(nextTheme);
+
+  try {
+    localStorage.setItem('theme', nextTheme);
+  } catch (error) {
+    // Ignore write errors in restricted environments.
+  }
+}
+
 // Create animated particles
 function createParticles() {
   const particlesContainer = document.getElementById('particles');
@@ -86,7 +151,10 @@ function highlightChatbot() {
     chatbot.style.animation = 'pulse 0.6s ease-in-out 4';
     
     // Add a glow effect
-    chatbot.style.filter = 'drop-shadow(0 0 18px rgba(13, 59, 102, 0.55))';
+    const isDark = document.documentElement.classList.contains('dark');
+    chatbot.style.filter = isDark
+      ? 'drop-shadow(0 0 18px rgba(139, 92, 246, 0.58))'
+      : 'drop-shadow(0 0 18px rgba(79, 70, 229, 0.52))';
     setTimeout(() => {
       chatbot.style.filter = '';
     }, 2400);
@@ -138,6 +206,7 @@ function showNotification(message) {
 
 // Initialize on page load
 window.addEventListener('load', function() {
+  initTheme();
   createParticles();
 });
 

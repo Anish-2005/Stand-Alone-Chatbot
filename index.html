@@ -7,6 +7,18 @@
   <link rel="shortcut icon" href="https://chatticket.vercel.app/chat-ticket-logo.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>ChatTicket Sandbox</title>
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      } catch (error) {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,9 +48,15 @@
           <span class="brand-subtitle">Assistant Sandbox</span>
         </div>
       </div>
-      <div class="status-chip">
-        <span class="dot"></span>
-        Live Test Mode
+      <div class="topbar-actions">
+        <div class="status-chip">
+          <span class="dot"></span>
+          Live Test Mode
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to dark mode">
+          <span class="material-icons" id="themeIcon">dark_mode</span>
+          <span id="themeLabel">Dark</span>
+        </button>
       </div>
     </div>
   </header>
