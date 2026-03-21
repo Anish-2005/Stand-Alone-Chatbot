@@ -147,6 +147,12 @@ body {
   font-size: 24px;
 }
 
+.brand-mark img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
 .brand-copy {
   display: flex;
   flex-direction: column;
