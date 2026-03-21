@@ -2,6 +2,7 @@
 let isOpening = false;
 let activeNotification = null;
 let resizeTimer;
+let isThemeAnimating = false;
 
 function getStoredTheme() {
   try {
@@ -13,6 +14,52 @@ function getStoredTheme() {
 
 function getSystemTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setStoredTheme(theme) {
+  try {
+    localStorage.setItem('theme', theme);
+  } catch (error) {
+    // Ignore write errors in restricted environments.
+  }
+}
+
+function getThemeAnimationSettings(triggerElement) {
+  const fallbackButton = document.getElementById('themeToggle');
+  const source = triggerElement || fallbackButton;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  let originX = width - 30;
+  let originY = 30;
+
+  if (source && typeof source.getBoundingClientRect === 'function') {
+    const rect = source.getBoundingClientRect();
+    originX = rect.left + rect.width / 2;
+    originY = rect.top + rect.height / 2;
+  }
+
+  const maxDistance = Math.max(
+    Math.hypot(originX, originY),
+    Math.hypot(width - originX, originY),
+    Math.hypot(originX, height - originY),
+    Math.hypot(width - originX, height - originY)
+  );
+
+  return {
+    x: Math.round(originX),
+    y: Math.round(originY),
+    radius: Math.ceil(maxDistance)
+  };
+}
+
+function setThemeTransitionVars(triggerElement) {
+  const settings = getThemeAnimationSettings(triggerElement);
+  const root = document.documentElement;
+
+  root.style.setProperty('--theme-switch-x', `${settings.x}px`);
+  root.style.setProperty('--theme-switch-y', `${settings.y}px`);
+  root.style.setProperty('--theme-switch-radius', `${settings.radius}px`);
 }
 
 function applyTheme(theme) {
@@ -36,6 +83,59 @@ function applyTheme(theme) {
   }
 }
 
+function animateThemeChange(nextTheme, triggerElement) {
+  if (isThemeAnimating) return;
+
+  const root = document.documentElement;
+  const toggleButton = document.getElementById('themeToggle');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  isThemeAnimating = true;
+  setThemeTransitionVars(triggerElement);
+
+  if (toggleButton) {
+    toggleButton.classList.add('is-switching');
+  }
+
+  const finalize = function () {
+    root.classList.remove('theme-transitioning', 'theme-transition-fallback');
+    if (toggleButton) {
+      toggleButton.classList.remove('is-switching');
+    }
+    isThemeAnimating = false;
+  };
+
+  if (reducedMotion) {
+    applyTheme(nextTheme);
+    setStoredTheme(nextTheme);
+    finalize();
+    return;
+  }
+
+  if (typeof document.startViewTransition === 'function') {
+    try {
+      root.classList.add('theme-transitioning');
+      const transition = document.startViewTransition(function () {
+        applyTheme(nextTheme);
+      });
+
+      setStoredTheme(nextTheme);
+      transition.finished.catch(function () {
+        // Ignore transition runtime errors and keep final theme state.
+      }).finally(finalize);
+      return;
+    } catch (error) {
+      root.classList.remove('theme-transitioning');
+      // Fall back to CSS-only animation below.
+    }
+  }
+
+  root.classList.add('theme-transition-fallback');
+  applyTheme(nextTheme);
+  setStoredTheme(nextTheme);
+  setTimeout(finalize, 520);
+}
+
 function initTheme() {
   const savedTheme = getStoredTheme();
   const initialTheme = savedTheme || getSystemTheme();
@@ -55,17 +155,11 @@ function initTheme() {
   }
 }
 
-function toggleTheme() {
+function toggleTheme(event) {
   const isCurrentlyDark = document.documentElement.classList.contains('dark');
   const nextTheme = isCurrentlyDark ? 'light' : 'dark';
-
-  applyTheme(nextTheme);
-
-  try {
-    localStorage.setItem('theme', nextTheme);
-  } catch (error) {
-    // Ignore write errors in restricted environments.
-  }
+  const triggerElement = event && event.currentTarget ? event.currentTarget : document.getElementById('themeToggle');
+  animateThemeChange(nextTheme, triggerElement);
 }
 
 // Create animated particles
