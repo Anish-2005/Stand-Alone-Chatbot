@@ -1,21 +1,26 @@
 // Debounce flag to prevent multiple rapid clicks
 let isOpening = false;
+let activeNotification = null;
+let resizeTimer;
 
 // Create animated particles
 function createParticles() {
   const particlesContainer = document.getElementById('particles');
-  const particleCount = 15;
+  if (!particlesContainer) return;
+
+  particlesContainer.innerHTML = '';
+  const particleCount = window.innerWidth <= 768 ? 8 : 14;
   
   for (let i = 0; i < particleCount; i++) {
     const particle = document.createElement('div');
     particle.className = 'particle';
     
-    const size = Math.random() * 60 + 20;
+    const size = Math.random() * 36 + 12;
     particle.style.width = size + 'px';
     particle.style.height = size + 'px';
     particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 20 + 's';
-    particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+    particle.style.animationDelay = Math.random() * 12 + 's';
+    particle.style.animationDuration = (Math.random() * 8 + 16) + 's';
     
     particlesContainer.appendChild(particle);
   }
@@ -81,7 +86,7 @@ function highlightChatbot() {
     chatbot.style.animation = 'pulse 0.6s ease-in-out 4';
     
     // Add a glow effect
-    chatbot.style.filter = 'drop-shadow(0 0 20px rgba(102, 126, 234, 0.8))';
+    chatbot.style.filter = 'drop-shadow(0 0 18px rgba(13, 59, 102, 0.55))';
     setTimeout(() => {
       chatbot.style.filter = '';
     }, 2400);
@@ -107,37 +112,36 @@ function scrollToFeatures() {
 // Show notification function
 function showNotification(message) {
   const isMobile = window.innerWidth <= 768;
-  
-  // Create notification element
+
+  if (activeNotification) {
+    activeNotification.remove();
+    activeNotification = null;
+  }
+
   const notification = document.createElement('div');
+  notification.className = `toast${isMobile ? ' mobile' : ''}`;
   notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    bottom: ${isMobile ? '90px' : '100px'};
-    ${isMobile ? 'left: 50%; transform: translateX(-50%);' : 'right: 24px;'}
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: ${isMobile ? '14px 20px' : '16px 24px'};
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    font-weight: 500;
-    animation: ${isMobile ? 'slideInUp' : 'slideInRight'} 0.3s ease-out;
-    max-width: ${isMobile ? '90%' : '300px'};
-    text-align: center;
-    font-size: ${isMobile ? '0.95rem' : '1rem'};
-  `;
-  
+  activeNotification = notification;
   document.body.appendChild(notification);
   
   // Remove after 3 seconds
   setTimeout(() => {
-    notification.style.animation = `${isMobile ? 'slideOutDown' : 'slideOutRight'} 0.3s ease-out`;
-    setTimeout(() => notification.remove(), 300);
+    notification.style.animation = `${isMobile ? 'slideOutDown' : 'slideOutRight'} 0.24s ease-out`;
+    setTimeout(() => {
+      notification.remove();
+      if (activeNotification === notification) {
+        activeNotification = null;
+      }
+    }, 240);
   }, 3000);
 }
 
 // Initialize on page load
 window.addEventListener('load', function() {
   createParticles();
+});
+
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(createParticles, 180);
 });

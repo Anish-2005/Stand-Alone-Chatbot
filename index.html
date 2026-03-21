@@ -5,10 +5,12 @@
   <meta charset="UTF-8" />
   <link rel="icon" href="Favicon1.ico.png">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Chatbot Testing Sandbox</title>
+  <title>ChatTicket Sandbox</title>
   
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
   
   <!-- Google Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -20,40 +22,83 @@
 <body>
   <!-- Animated Background Particles -->
   <div class="particles" id="particles"></div>
+  <div class="background-orbs" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"><span class="material-icons">smart_toy</span></div>
+        <div class="brand-copy">
+          <span class="brand-title">ChatTicket</span>
+          <span class="brand-subtitle">Assistant Sandbox</span>
+        </div>
+      </div>
+      <div class="status-chip">
+        <span class="dot"></span>
+        Live Test Mode
+      </div>
+    </div>
+  </header>
 
   <!-- Main Container -->
-  <div class="container">
-    
-    <!-- Header -->
-    <div class="header">
-      <div class="badge"><span class="material-icons">rocket_launch</span> Testing Sandbox</div>
-      <h1>Chatbot Testing Environment</h1>
-      <p>Experience our AI-powered ticketing assistant in action. Test features, explore capabilities, and see how seamless customer support can be.</p>
-    </div>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="badge"><span class="material-icons">verified</span> Enterprise-ready assistant</div>
+        <h1>Professional AI ticket support experience, ready for production validation.</h1>
+        <p>Run real conversations, evaluate response quality, and verify ticketing workflows in a controlled environment designed for product and support teams.</p>
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="openChatbot()">
+            <span class="material-icons">chat</span>
+            Open Chatbot
+          </button>
+          <button class="btn btn-secondary" onclick="scrollToFeatures()">
+            <span class="material-icons">insights</span>
+            View Capabilities
+          </button>
+        </div>
+      </div>
 
-    <!-- Info Banner -->
-    <div class="info-banner">
+      <aside class="hero-panel" aria-label="Service indicators">
+        <h2>Service Indicators</h2>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-value">24/7</span>
+            <span class="hero-stat-label">Continuous availability</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-value">&lt; 2s</span>
+            <span class="hero-stat-label">Average first response</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-value">95%</span>
+            <span class="hero-stat-label">Intent match accuracy</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="info-banner">
       <h3>
-        <span class="material-icons">chat_bubble</span>
-        Try the Chatbot
+        <span class="material-icons">campaign</span>
+        Quick Start
       </h3>
-      <p>Click the chatbot icon in the bottom-right corner to start a conversation. Test ticket booking, inquiries, and support features in real-time.</p>
-    </div>
+      <p>Use the chatbot icon at the bottom-right to start testing flows for booking, schedule lookup, cancellation, and support escalation.</p>
+    </section>
 
-    <!-- Feature Cards Grid -->
-    <div class="content-grid" id="features">
-      
+    <section class="content-grid" id="features">
       <div class="feature-card">
         <div class="feature-icon"><span class="material-icons">confirmation_number</span></div>
+        <span class="feature-tag">Ticket Lifecycle</span>
         <h3>Smart Ticketing</h3>
-        <p>Book tickets effortlessly through natural conversation. Our AI understands context and helps you find the perfect event or service.</p>
+        <p>Guide users from discovery to confirmation with structured prompts, seat selection support, and context-aware follow-up handling.</p>
         <div class="stats">
           <div class="stat-item">
             <span class="stat-value">24/7</span>
             <span class="stat-label">Available</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value">< 2s</span>
+            <span class="stat-value">&lt; 2s</span>
             <span class="stat-label">Response</span>
           </div>
         </div>
@@ -61,8 +106,9 @@
 
       <div class="feature-card">
         <div class="feature-icon"><span class="material-icons">smart_toy</span></div>
+        <span class="feature-tag">Conversation AI</span>
         <h3>AI Assistant</h3>
-        <p>Powered by advanced natural language processing to understand your needs and provide instant, accurate responses.</p>
+        <p>Use advanced language understanding to interpret user intent, maintain conversation state, and return accurate actions quickly.</p>
         <div class="stats">
           <div class="stat-item">
             <span class="stat-value">95%</span>
@@ -77,8 +123,9 @@
 
       <div class="feature-card">
         <div class="feature-icon"><span class="material-icons">bolt</span></div>
+        <span class="feature-tag">Operational Support</span>
         <h3>Instant Support</h3>
-        <p>Get immediate answers to your questions, check booking status, modify reservations, and receive personalized recommendations.</p>
+        <p>Handle booking status checks, modifications, policy questions, and transfer-to-agent triggers through one consistent interface.</p>
         <div class="stats">
           <div class="stat-item">
             <span class="stat-value">100%</span>
@@ -90,26 +137,24 @@
           </div>
         </div>
       </div>
-
-    </div>
+    </section>
 
     <!-- Action Section -->
-    <div class="action-section">
-      <h2>Ready to Experience AI-Powered Support?</h2>
-      <p>Open the chatbot in the corner and start a conversation to see how it works</p>
+    <section class="action-section">
+      <h2>Validate your customer support journeys now</h2>
+      <p>Launch the chatbot and run your highest-priority scenarios to benchmark quality and response consistency.</p>
       <div class="button-group">
         <button class="btn btn-primary" onclick="openChatbot()">
-          <span class="material-icons">chat</span>
-          Open Chatbot
+          <span class="material-icons">play_circle</span>
+          Start Testing
         </button>
         <button class="btn btn-secondary" onclick="scrollToFeatures()">
-          <span class="material-icons">menu_book</span>
-          Learn More
+          <span class="material-icons">fact_check</span>
+          Review Features
         </button>
       </div>
-    </div>
-
-  </div>
+    </section>
+  </main>
 
   <!-- Chatbot Widget (Bottom Right Corner) -->
   <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
